@@ -25,13 +25,126 @@ function IsPlayerAdmin(source)
     if not xPlayer then return false end
     
     local steamHex = xPlayer.identifier
+    print("Checking admin status for: " .. steamHex) -- Debug
+    
     for _, adminHex in pairs(Config.AdminSteamHex) do
+        print("Comparing with admin: " .. adminHex) -- Debug
         if steamHex == adminHex then
             return true
         end
     end
     return false
 end
+
+-- Check if player is superadmin
+function IsPlayerSuperAdmin(source)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not xPlayer then return false end
+    
+    local steamHex = xPlayer.identifier
+    for _, superAdminHex in pairs(Config.SuperAdminSteamHex) do
+        if steamHex == superAdminHex then
+            return true
+        end
+    end
+    return false
+end
+
+-- Superadmin command to set coin admin
+RegisterCommand('setcoinadmin', function(source, args, rawCommand)
+    if not IsPlayerSuperAdmin(source) then
+        TriggerClientEvent('esx:showNotification', source, 'Du har inte behörighet för detta kommando.')
+        return
+    end
+    
+    local targetId = tonumber(args[1])
+    if not targetId then
+        TriggerClientEvent('esx:showNotification', source, 'Användning: /setcoinadmin [id]')
+        return
+    end
+    
+    local targetPlayer = ESX.GetPlayerFromId(targetId)
+    if not targetPlayer then
+        TriggerClientEvent('esx:showNotification', source, 'Spelaren hittades inte.')
+        return
+    end
+    
+    local targetSteamHex = targetPlayer.identifier
+    
+    -- Check if already admin
+    for _, adminHex in pairs(Config.AdminSteamHex) do
+        if adminHex == targetSteamHex then
+            TriggerClientEvent('esx:showNotification', source, targetPlayer.getName() .. ' är redan coin admin.')
+            return
+        end
+    end
+    
+    -- Add to admin list
+    table.insert(Config.AdminSteamHex, targetSteamHex)
+    
+    TriggerClientEvent('esx:showNotification', source, targetPlayer.getName() .. ' har blivit coin admin.')
+    TriggerClientEvent('esx:showNotification', targetId, 'Du har blivit coin admin!')
+    
+    print("Added coin admin: " .. targetSteamHex .. " (" .. targetPlayer.getName() .. ")")
+end, false)
+
+-- Superadmin command to remove coin admin
+RegisterCommand('removecoinadmin', function(source, args, rawCommand)
+    if not IsPlayerSuperAdmin(source) then
+        TriggerClientEvent('esx:showNotification', source, 'Du har inte behörighet för detta kommando.')
+        return
+    end
+    
+    local targetId = tonumber(args[1])
+    if not targetId then
+        TriggerClientEvent('esx:showNotification', source, 'Användning: /removecoinadmin [id]')
+        return
+    end
+    
+    local targetPlayer = ESX.GetPlayerFromId(targetId)
+    if not targetPlayer then
+        TriggerClientEvent('esx:showNotification', source, 'Spelaren hittades inte.')
+        return
+    end
+    
+    local targetSteamHex = targetPlayer.identifier
+    
+    -- Remove from admin list
+    for i, adminHex in pairs(Config.AdminSteamHex) do
+        if adminHex == targetSteamHex then
+            table.remove(Config.AdminSteamHex, i)
+            TriggerClientEvent('esx:showNotification', source, targetPlayer.getName() .. ' är inte längre coin admin.')
+            TriggerClientEvent('esx:showNotification', targetId, 'Du är inte längre coin admin.')
+            print("Removed coin admin: " .. targetSteamHex .. " (" .. targetPlayer.getName() .. ")")
+            return
+        end
+    end
+    
+    TriggerClientEvent('esx:showNotification', source, targetPlayer.getName() .. ' var inte coin admin.')
+end, false)
+
+-- Debug command to check admin status
+RegisterCommand('checkcoinadmin', function(source, args, rawCommand)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not xPlayer then return end
+    
+    local steamHex = xPlayer.identifier
+    print("=== COIN ADMIN DEBUG ===")
+    print("Player Steam Hex: " .. steamHex)
+    print("Is Admin: " .. tostring(IsPlayerAdmin(source)))
+    print("Is SuperAdmin: " .. tostring(IsPlayerSuperAdmin(source)))
+    print("Current Admins:")
+    for i, adminHex in pairs(Config.AdminSteamHex) do
+        print("  " .. i .. ": " .. adminHex)
+    end
+    print("Current SuperAdmins:")
+    for i, superAdminHex in pairs(Config.SuperAdminSteamHex) do
+        print("  " .. i .. ": " .. superAdminHex)
+    end
+    print("========================")
+    
+    TriggerClientEvent('esx:showNotification', source, 'Admin status: ' .. tostring(IsPlayerAdmin(source)) .. ' | SuperAdmin: ' .. tostring(IsPlayerSuperAdmin(source)))
+end, false)
 
 -- Admin command to give coins
 RegisterCommand('givecoins', function(source, args, rawCommand)

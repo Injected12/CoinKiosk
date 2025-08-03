@@ -6,6 +6,11 @@ Config.AdminSteamHex = {
     "steam:110000000000001"  -- Add more as needed
 }
 
+-- Superadmin Steam Hex IDs (can set other admins)
+Config.SuperAdminSteamHex = {
+    "steam:110000000000000", -- Replace with your Steam Hex
+}
+
 -- NPC Locations and Models
 Config.ShopNPC = {
     coords = vector4(221.1801, 2800.9355, 45.8399, 97.9855),
