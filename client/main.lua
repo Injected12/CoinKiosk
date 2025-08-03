@@ -80,7 +80,19 @@ end)
 RegisterNUICallback('closeMenu', function(data, cb)
     isMenuOpen = false
     SetNuiFocus(false, false)
-    SetCursorLocation(0.5, 0.5) -- Reset cursor position
+    
+    -- Wait a frame then disable cursor properly
+    Citizen.CreateThread(function()
+        Wait(100)
+        SetNuiFocus(false, false)
+        SetCursorLocation(0.5, 0.5)
+        -- Force disable mouse cursor
+        while IsNuiFocused() do
+            SetNuiFocus(false, false)
+            Wait(10)
+        end
+    end)
+    
     cb('ok')
 end)
 

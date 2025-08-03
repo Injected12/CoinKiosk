@@ -233,45 +233,79 @@ AddEventHandler('coinshop:purchaseItem', function(productId)
     TriggerClientEvent('esx:showNotification', source, 'Ta dig till den markerade platsen på din GPS för att hämta din vara.')
 end)
 
--- Admin: Add product
+-- Add product (available to everyone)
 RegisterNetEvent('coinshop:addProduct')
 AddEventHandler('coinshop:addProduct', function(productData)
     local source = source
-    if not IsPlayerAdmin(source) then return end
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not xPlayer then return end
+    
+    print("=== ADD PRODUCT DEBUG ===")
+    print("Data received:", json.encode(productData))
     
     -- Generate unique ID
-    productData.id = #products + 1
-    table.insert(products, productData)
+    local newId = 1
+    for _, product in pairs(products) do
+        if product.id >= newId then
+            newId = product.id + 1
+        end
+    end
+    
+    local newProduct = {
+        id = newId,
+        itemName = productData.itemName,
+        displayName = productData.displayName,
+        imageUrl = productData.imageUrl,
+        price = productData.price
+    }
+    
+    table.insert(products, newProduct)
+    print("Product added to table:", json.encode(newProduct))
+    print("Total products now:", #products)
+    
     SaveProducts()
     
-    TriggerClientEvent('esx:showNotification', source, 'Produkt tillagd!')
-    TriggerClientEvent('coinshop:refreshProducts', source, products)
+    TriggerClientEvent('esx:showNotification', source, 'Produkt tillagd: ' .. newProduct.displayName)
+    
+    -- Force refresh the admin panel for the source player
+    Wait(100)
+    TriggerClientEvent('coinshop:openAdmin', source)
 end)
 
--- Admin: Update product
+-- Update product (available to everyone)
 RegisterNetEvent('coinshop:updateProduct')
 AddEventHandler('coinshop:updateProduct', function(productId, productData)
     local source = source
-    if not IsPlayerAdmin(source) then return end
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not xPlayer then return end
     
     for i, product in pairs(products) do
         if product.id == productId then
-            products[i] = productData
-            products[i].id = productId
+            products[i] = {
+                id = productId,
+                itemName = productData.itemName,
+                displayName = productData.displayName,
+                imageUrl = productData.imageUrl,
+                price = productData.price
+            }
             break
         end
     end
     
     SaveProducts()
     TriggerClientEvent('esx:showNotification', source, 'Produkt uppdaterad!')
-    TriggerClientEvent('coinshop:refreshProducts', source, products)
+    
+    -- Force refresh the admin panel
+    Wait(100)
+    TriggerClientEvent('coinshop:openAdmin', source)
 end)
 
--- Admin: Delete product
+-- Delete product (available to everyone)
 RegisterNetEvent('coinshop:deleteProduct')
 AddEventHandler('coinshop:deleteProduct', function(productId)
     local source = source
-    if not IsPlayerAdmin(source) then return end
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not xPlayer then return end
     
     for i, product in pairs(products) do
         if product.id == productId then
@@ -282,7 +316,10 @@ AddEventHandler('coinshop:deleteProduct', function(productId)
     
     SaveProducts()
     TriggerClientEvent('esx:showNotification', source, 'Produkt borttagen!')
-    TriggerClientEvent('coinshop:refreshProducts', source, products)
+    
+    -- Force refresh the admin panel
+    Wait(100)
+    TriggerClientEvent('coinshop:openAdmin', source)
 end)
 
 -- Handle item pickup
