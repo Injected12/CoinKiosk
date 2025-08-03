@@ -80,6 +80,7 @@ end)
 RegisterNUICallback('closeMenu', function(data, cb)
     isMenuOpen = false
     SetNuiFocus(false, false)
+    SetCursorLocation(0.5, 0.5) -- Reset cursor position
     cb('ok')
 end)
 

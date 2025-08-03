@@ -31,7 +31,7 @@ function closeAdmin() {
             'Content-Type': 'application/json; charset=UTF-8',
         },
         body: JSON.stringify({})
-    });
+    }).catch(() => {}); // Ignore fetch errors
 }
 
 function renderProducts() {
