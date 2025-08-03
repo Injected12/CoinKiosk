@@ -10,10 +10,11 @@
     <div id="container" class="hidden">
         <div class="shop-window">
             <div class="header">
-                <h1>COIN BUTIK</h1>
-                <div class="coins-display">
+                <h1 id="window-title">COIN BUTIK</h1>
+                <div class="coins-display" id="coins-display">
                     <span>Tillgängliga coins: <span id="coin-amount">0</span></span>
                 </div>
+                <button class="add-btn hidden" id="add-btn">+</button>
                 <button class="close-btn" id="close-btn">&times;</button>
             </div>
             
@@ -26,6 +27,43 @@
                     <p>Inga produkter tillgängliga för tillfället.</p>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Lägg till produkt</h2>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            
+            <form id="product-form">
+                <div class="form-group">
+                    <label for="item-name">Item-namn:</label>
+                    <input type="text" id="item-name" placeholder="t.ex. weapon_pistol" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="display-name">Visningsnamn:</label>
+                    <input type="text" id="display-name" placeholder="t.ex. Pistol" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="image-url">Bildlänk:</label>
+                    <input type="url" id="image-url" placeholder="https://..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="price">Coinpris:</label>
+                    <input type="number" id="price" min="1" placeholder="100" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" id="cancel-btn">Avbryt</button>
+                    <button type="submit" id="save-btn">Lägg till vara</button>
+                </div>
+            </form>
         </div>
     </div>
 

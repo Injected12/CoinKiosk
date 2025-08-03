@@ -27,9 +27,6 @@ files {
     'html/index.html',
     'html/style.css',
     'html/script.js',
-    'html/admin.html',
-    'html/admin.css',
-    'html/admin.js',
     'data/products.json'
 }
 
