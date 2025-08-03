@@ -24,7 +24,16 @@ end)
 -- Open admin panel
 RegisterNetEvent('coinshop:openAdmin')
 AddEventHandler('coinshop:openAdmin', function()
-    if isMenuOpen then return end
+    if isMenuOpen then 
+        -- If menu is already open, just refresh it as admin
+        ESX.TriggerServerCallback('coinshop:getProducts', function(products)
+            SendNUIMessage({
+                type = 'openAdmin',
+                products = products
+            })
+        end)
+        return 
+    end
     
     ESX.TriggerServerCallback('coinshop:getProducts', function(products)
         isMenuOpen = true
@@ -81,13 +90,14 @@ RegisterNUICallback('closeMenu', function(data, cb)
     isMenuOpen = false
     SetNuiFocus(false, false)
     
-    -- Wait a frame then disable cursor properly
+    -- Immediate cursor fix
     Citizen.CreateThread(function()
-        Wait(100)
+        Wait(50)
         SetNuiFocus(false, false)
         SetCursorLocation(0.5, 0.5)
-        -- Force disable mouse cursor
-        while IsNuiFocused() do
+        
+        -- Extra safety - force disable cursor for a few frames
+        for i = 1, 10 do
             SetNuiFocus(false, false)
             Wait(10)
         end

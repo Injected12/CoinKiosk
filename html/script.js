@@ -138,8 +138,11 @@ function openModal(isEdit = false) {
 }
 
 function closeModal() {
-    document.getElementById('modal').classList.add('hidden');
-    document.getElementById('product-form').reset();
+    const modal = document.getElementById('modal');
+    const form = document.getElementById('product-form');
+    
+    if (modal) modal.classList.add('hidden');
+    if (form) form.reset();
     editingProduct = null;
 }
 
@@ -205,6 +208,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     'Content-Type': 'application/json; charset=UTF-8',
                 },
                 body: JSON.stringify(formData)
+            }).then(() => {
+                closeModal();
             });
         } else {
             fetch(`https://${GetParentResourceName()}/addProduct`, {
@@ -213,10 +218,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     'Content-Type': 'application/json; charset=UTF-8',
                 },
                 body: JSON.stringify(formData)
+            }).then(() => {
+                closeModal();
             });
         }
-        
-        closeModal();
     });
 });
 

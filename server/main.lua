@@ -267,9 +267,8 @@ AddEventHandler('coinshop:addProduct', function(productData)
     
     TriggerClientEvent('esx:showNotification', source, 'Produkt tillagd: ' .. newProduct.displayName)
     
-    -- Force refresh the admin panel for the source player
-    Wait(100)
-    TriggerClientEvent('coinshop:openAdmin', source)
+    -- Just refresh the products list instead of reopening the admin panel
+    TriggerClientEvent('coinshop:refreshProducts', source, products)
 end)
 
 -- Update product (available to everyone)
@@ -295,9 +294,8 @@ AddEventHandler('coinshop:updateProduct', function(productId, productData)
     SaveProducts()
     TriggerClientEvent('esx:showNotification', source, 'Produkt uppdaterad!')
     
-    -- Force refresh the admin panel
-    Wait(100)
-    TriggerClientEvent('coinshop:openAdmin', source)
+    -- Just refresh the products list
+    TriggerClientEvent('coinshop:refreshProducts', source, products)
 end)
 
 -- Delete product (available to everyone)
@@ -317,9 +315,8 @@ AddEventHandler('coinshop:deleteProduct', function(productId)
     SaveProducts()
     TriggerClientEvent('esx:showNotification', source, 'Produkt borttagen!')
     
-    -- Force refresh the admin panel
-    Wait(100)
-    TriggerClientEvent('coinshop:openAdmin', source)
+    -- Just refresh the products list
+    TriggerClientEvent('coinshop:refreshProducts', source, products)
 end)
 
 -- Handle item pickup
