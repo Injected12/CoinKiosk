@@ -177,13 +177,8 @@ RegisterCommand('coinstatus', function(source, args, rawCommand)
     TriggerClientEvent('esx:showNotification', source, string.format('Du har %d coins.', coins))
 end, false)
 
--- Admin command to open admin panel
+-- Command to open admin panel (available to everyone)
 RegisterCommand('coinadmin', function(source, args, rawCommand)
-    if not IsPlayerAdmin(source) then
-        TriggerClientEvent('esx:showNotification', source, 'Du har inte behörighet för detta kommando.')
-        return
-    end
-    
     TriggerClientEvent('coinshop:openAdmin', source)
 end, false)
 
