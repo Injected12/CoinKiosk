@@ -1,0 +1,169 @@
+Coin Shop Script för ESX
+Jag vill att du skapar ett fullt fungerande FiveM-script till ESX som implementerar ett Coin-system och Coin-butik. Scriptet ska följa nedanstående specifikationer mycket noggrant:
+
+🪙 Coin-system (ESX-baserat)
+Coins ska inte ligga i inventory (för att undvika rån).
+
+Varje spelare har ett separat coin-värde kopplat till sin identitet.
+
+Coins ska endast kunna ges av admin i nuläget via kommandot:
+
+bash
+Copy
+Edit
+/givecoins [id] [antal]
+Spelaren ska kunna se sitt coinsaldo via kommandot:
+
+bash
+Copy
+Edit
+/coinstatus
+→ Detta ska visa en chat-notis med spelarens nuvarande coin-saldo.
+
+🏪 NPC-butik (Coinshop)
+En NPC ska stå vid koordinater:
+
+scss
+Copy
+Edit
+vector4(221.1801, 2800.9355, 45.8399, 97.9855)
+NPC-modell:
+
+nginx
+Copy
+Edit
+a_m_m_soucent_03
+Text över NPC:n ska visa:
+
+arduino
+Copy
+Edit
+"COIN butik"
+När spelaren trycker E, ska en meny öppnas:
+
+Design: Svart, grå, neonvit (stilren och modern).
+
+Muspekare ska visas när menyn är öppen.
+
+Ett X i övre hörnet för att stänga menyn.
+
+Menyn ska öppnas med SetNuiFocus(true, true) och muslåset tas bort.
+
+💰 Menyinnehåll i Coinbutiken
+I övre högra hörnet ska det stå:
+
+arduino
+Copy
+Edit
+"Tillgängliga coins: [antal coins]"
+I mitten listas alla produkter som admins har lagt till via /coinadmin.
+
+Varje produktkort visar:
+
+Bild (via bildlänk från fivemanage eller config)
+
+Visningsnamn
+
+Pris i coins
+
+När man trycker på en produkt:
+
+Om spelaren har tillräckligt med coins:
+→ Knappen säger "Köp"
+
+Om inte:
+→ Knappen säger "Inte nog med Coins"
+
+Vid köp (och spelaren har nog coins):
+
+Coins dras från spelarens saldo
+
+En notis visas:
+
+arduino
+Copy
+Edit
+"Ta dig till den markerade platsen på din GPS för att hämta din vara."
+En GPS-markering (blip) läggs på:
+
+scss
+Copy
+Edit
+vector4(166.7342, 2228.9272, 90.7741, 75.3422)
+Här står en NPC:
+
+makefile
+Copy
+Edit
+modell: a_m_y_beach_03
+När spelaren trycker E där:
+
+En animation spelas upp
+
+Spelaren får sitt item inlagt i sitt OX Inventory
+
+🛠️ Adminmeny: /coinadmin
+Endast tillgänglig för admins med rätt Steam Hex (via config).
+
+När man skriver /coinadmin, öppnas en liknande meny som coinshop-menyn, men:
+
+Visa först bara ett “+” i övre vänstra hörnet
+
+När man klickar på plus:
+
+Formulär öppnas med följande fält:
+
+Item-namn (t.ex. weapon_pistol)
+
+Visningsnamn (t.ex. "Pistol")
+
+Bildlänk (för visning, t.ex. från fivemanage)
+
+Coinpris
+
+När man klickar “Lägg till vara”, sparas den till en config/datafil (helst JSON).
+
+Tillbaka i adminvyn ska nu varan synas:
+
+Med “Redigera”-knapp på varje produkt
+
+Möjlighet att ta bort eller ändra produkten.
+
+Alla produkter här speglas live till vanliga Coin-butiken.
+
+🎯 Funktionella krav
+All interaktion ska ske med NUI-menyer (HTML/CSS/JS).
+
+UI ska vara inspirerat av bilden jag laddar upp (den har lila stil, men vår ska vara svart/grå med neonvit).
+
+Scriptet ska vara:
+
+Optimerat för ESX
+
+Konfigurerbart (via config.lua eller JSON)
+
+Modulärt (ha möjlighet att lägga till fler funktioner senare, t.ex. challenges för att tjäna coins)
+
+All hantering av coins och produkter ska ske serverside.
+
+📦 Sammanfattning av NPC:s:
+Coin-butik (NPC 1):
+
+Modell: a_m_m_soucent_03
+
+Plats: 221.1801, 2800.9355, 45.8399, 97.9855
+
+Funktion: Öppnar butik för att köpa med coins
+
+Utlämningspunkt (NPC 2):
+
+Modell: a_m_y_beach_03
+
+Plats: 166.7342, 2228.9272, 90.7741, 75.3422
+
+Funktion: Spelare hämtar köpt vara
+
+📷 Bifogad referensbild:
+Använd bifogad PNG-bild som UI-referens för menyens layout/struktur.
+
+Designen i scriptet ska dock vara svart, grå och neonvit, inte lila.
